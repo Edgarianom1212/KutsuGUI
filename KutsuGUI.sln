@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KutsuGUI", "KutsuGUI.csproj", "{A621C813-63A7-47DF-8DF6-1D3F39A20152}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A621C813-63A7-47DF-8DF6-1D3F39A20152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A621C813-63A7-47DF-8DF6-1D3F39A20152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A621C813-63A7-47DF-8DF6-1D3F39A20152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A621C813-63A7-47DF-8DF6-1D3F39A20152}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB890BA2-D3EC-4CA0-9DC1-529EDCE990D8}
+	EndGlobalSection
+EndGlobal
