@@ -1,20 +1,54 @@
-<Window xmlns="https://github.com/avaloniaui"
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:KutsuGUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+        xmlns:theme="clr-namespace:SukiUI.Theme;assembly=SukiUI"
+	    xmlns:i="https://github.com/projektanker/icons.avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KutsuGUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="KutsuGUI">
 
-    <Design.DataContext>
+	<suki:SukiWindow.Hosts>
+		<suki:SukiToastHost Manager="{Binding ToastManager}"/>
+	</suki:SukiWindow.Hosts>
+	<Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+	<Grid ColumnDefinitions="2*, Auto, 1*" RowDefinitions="Auto, 1*, Auto">
+		<Grid RowDefinitions="1*, 1*" Margin="100, 50, 0, 50">
+		    <Button Width="300" Height="50" Content="Open File Explorer" Click="OpenFileExplorer"/>
+        </Grid>
+		<ScrollViewer Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<StackPanel Margin="100, 0, 0, 0">
+				<ItemsControl ItemsSource="{Binding SelectedFilesStrings}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+		<Grid Grid.Row="2" Margin="100,50,0,50">
+            <TextBlock HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Center" Text="{Binding SelectedFolderString}"/>
+		    <Button Width="300" Height="50" Content="Choose Folder Destination" Click="OpenFolderExplorer"/>
+        </Grid>
+		<suki:GlassCard Grid.RowSpan="3" Grid.Column="1" Height="210" Width="250">
+			<suki:GroupBox Header="Select File Name">
+				<Grid RowDefinitions="60, 60">
+                    <TextBox Width="400" TextAlignment="Center" Text="{Binding NewFileName}"/>
+					<Grid Grid.Row="1">
+                        <Button x:Name="ConvertButton" theme:ButtonExtensions.ShowProgress="false" Margin="0, 15, 0, 0" Content="Convert" Click="ConvertFiles"/>
+                    </Grid>
+                </Grid>
+            </suki:GroupBox>
+        </suki:GlassCard>
+	</Grid>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-</Window>
+</suki:SukiWindow>
