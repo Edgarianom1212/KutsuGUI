@@ -21,20 +21,18 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<Grid ColumnDefinitions="2*, Auto, 1*" RowDefinitions="Auto, 1*, Auto">
-		<Grid RowDefinitions="1*, 1*" Margin="100, 50, 0, 50">
-		    <Button Width="300" Height="50" Content="Open File Explorer" Click="OpenFileExplorer"/>
-        </Grid>
-		<ScrollViewer Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<StackPanel Margin="100, 0, 0, 0">
-				<ItemsControl ItemsSource="{Binding SelectedFilesStrings}">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </ScrollViewer>
+		    <Button Width="300" Height="50" Margin="100, 50, 0, 50" Content="Open File Explorer" Click="OpenFileExplorer"/>
+		    <ScrollViewer Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+			    <StackPanel Margin="100, 0, 0, 0">
+				    <ItemsControl ItemsSource="{Binding SelectedFilesStrings}">
+					    <ItemsControl.ItemTemplate>
+						    <DataTemplate>
+							    <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
 		<Grid Grid.Row="2" Margin="100,50,0,50">
             <TextBlock HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Center" Text="{Binding SelectedFolderString}"/>
 		    <Button Width="300" Height="50" Content="Choose Folder Destination" Click="OpenFolderExplorer"/>
@@ -50,5 +48,4 @@
             </suki:GroupBox>
         </suki:GlassCard>
 	</Grid>
-
 </suki:SukiWindow>
