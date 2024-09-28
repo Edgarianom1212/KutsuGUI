@@ -68,16 +68,16 @@ namespace KutsuGUI.Views
 		{
 			ConvertButton.ShowProgress();
 
-			successToast = vm.ToastManager.CreateToast().WithTitle("Success").WithContent("Finished converting files").Dismiss().After(TimeSpan.FromSeconds(6));
+			successToast = vm.ToastManager.CreateToast().WithTitle("Success").WithContent("Finished converting files").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			successToast.SetType(Avalonia.Controls.Notifications.NotificationType.Success);
 
-			noFilesSelectedToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No files were selected").Dismiss().After(TimeSpan.FromSeconds(6));
+			noFilesSelectedToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No files were selected").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			noFilesSelectedToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
 
-			noDestinationSelectedToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No destination was selected").Dismiss().After(TimeSpan.FromSeconds(6));
+			noDestinationSelectedToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No destination was selected").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			noDestinationSelectedToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
 
-			noNewFileNameToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No new file name was selected").Dismiss().After(TimeSpan.FromSeconds(6));
+			noNewFileNameToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No new file name was selected").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			noNewFileNameToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
 
 			if (vm.NewFileName.Trim() != "" && vm.SelectedFilesStrings?[0] != vm.initSelectedFileString && vm.SelectedFolderString != vm.initSelectedFolderString)
@@ -89,10 +89,16 @@ namespace KutsuGUI.Views
 						File.Move(vm.SelectedFilesStrings.ElementAt(i), vm.SelectedFolderString + vm.NewFileName.Trim() + (i + 1).ToString());
 						vm.SetDefaultValues();
 						wasSuccess = true;
+						for (int y = 0; y < 20; y++)
+						{
+							vm.ProgressValue += 5;
+							await Task.Delay(40); //put some loading time so user sees the process
+						}
 					}
 				}
 			}
-			await Task.Delay(800); //put some loading time so user sees the process
+			if (!wasSuccess)
+				await Task.Delay(800);
 
 			ConvertButton.HideProgress();
 
@@ -111,6 +117,15 @@ namespace KutsuGUI.Views
 
 				if (vm.SelectedFilesStrings?[0] == vm.initSelectedFileString)
 					noFilesSelectedToast.Queue();
+			}
+			await Task.Delay(3000);
+			if(vm.ProgressValue == 100)
+			{
+				for (int y = 0; y < 20; y++)
+				{
+					vm.ProgressValue -= 5;
+					await Task.Delay(40); //put some loading time so user sees the process
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@ using ReactiveUI;
 using SukiUI.Toasts;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 namespace KutsuGUI.ViewModels
 {
@@ -35,6 +36,18 @@ namespace KutsuGUI.ViewModels
 		public IReadOnlyList<IStorageFile>? SelectedFiles { get; set; }
 		public IReadOnlyList<IStorageFolder>? SelectedFolders { get; set; }
 		public ObservableCollection<string> SelectedFilesStrings { get; set; }
+		private int progressValue;
+		public int ProgressValue
+		{
+			get
+			{
+				return progressValue;
+			}
+			set
+			{
+				this.RaiseAndSetIfChanged(ref progressValue, value);
+			}
+		}
 
 		private string newFileName;
 		public string NewFileName

@@ -20,32 +20,67 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<Grid ColumnDefinitions="2*, Auto, 1*" RowDefinitions="Auto, 1*, Auto">
-		    <Button Width="300" Height="50" Margin="100, 50, 0, 50" Content="Open File Explorer" Click="OpenFileExplorer"/>
-		    <ScrollViewer Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-			    <StackPanel Margin="100, 0, 0, 0">
-				    <ItemsControl ItemsSource="{Binding SelectedFilesStrings}">
-					    <ItemsControl.ItemTemplate>
-						    <DataTemplate>
-							    <TextBlock Text="{Binding}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
-		<Grid Grid.Row="2" Margin="100,50,0,50">
-            <TextBlock HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Center" Text="{Binding SelectedFolderString}"/>
-		    <Button Width="300" Height="50" Content="Choose Folder Destination" Click="OpenFolderExplorer"/>
-        </Grid>
-		<suki:GlassCard Grid.RowSpan="3" Grid.Column="1" Height="210" Width="250">
-			<suki:GroupBox Header="Select File Name">
-				<Grid RowDefinitions="60, 60">
-                    <TextBox Width="400" TextAlignment="Center" Text="{Binding NewFileName}"/>
-					<Grid Grid.Row="1">
-                        <Button x:Name="ConvertButton" theme:ButtonExtensions.ShowProgress="false" Margin="0, 15, 0, 0" Content="Convert" Click="ConvertFiles"/>
-                    </Grid>
-                </Grid>
-            </suki:GroupBox>
-        </suki:GlassCard>
-	</Grid>
+	<suki:SukiSideMenu>
+
+		<suki:SukiSideMenu.HeaderContent>
+			<Border CornerRadius="25" ClipToBounds="True" Width="50" Height="50" Margin="40">
+				<Image Source="/Assets/KutsuGUI.ico" />
+			</Border>
+		</suki:SukiSideMenu.HeaderContent>
+
+		<suki:SukiSideMenu.Items>
+			<suki:SukiSideMenuItem Header="File Manager">
+				<suki:SukiSideMenuItem.Icon>
+					<Image Source="/Assets/KutsuGUI.ico"/>
+				</suki:SukiSideMenuItem.Icon>
+				<suki:SukiSideMenuItem.PageContent>
+					<Grid ColumnDefinitions="2*, Auto, 1*" RowDefinitions="1*, 1*">
+						<suki:GlassCard Grid.RowSpan="2" Margin="20">
+							<suki:GroupBox Header="Select Files">
+								<Grid RowDefinitions="100, 1*">
+									<Button Width="300" Height="50" Margin="0" Content="Open File Explorer" Click="OpenFileExplorer"/>
+									<ScrollViewer Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+										<StackPanel Margin="0">
+											<ItemsControl ItemsSource="{Binding SelectedFilesStrings}">
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Text="{Binding}"/>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</StackPanel>
+									</ScrollViewer>
+								</Grid>
+							</suki:GroupBox>
+						</suki:GlassCard>
+						<suki:GlassCard Grid.Column="1" Margin="20">
+							<suki:GroupBox Header="Select Destination Folder">
+								<Grid RowDefinitions="1*, 1*">
+									<Button Margin="20" Content="Choose Destination Folder" Click="OpenFolderExplorer"/>
+									<TextBlock Grid.Row="1" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding SelectedFolderString}"/>
+								</Grid>
+							</suki:GroupBox>
+						</suki:GlassCard>
+						<suki:GlassCard Grid.Row="1" Grid.Column="1" Margin="20">
+							<suki:GroupBox Header="Select File Name">
+								<Grid RowDefinitions="1*, 1*">
+									<TextBox FontSize="15" Margin="20" TextAlignment="Center" Text="{Binding NewFileName}"/>
+									<Grid Grid.Row="1">
+										<Button Margin="20" x:Name="ConvertButton" theme:ButtonExtensions.ShowProgress="false" Content="Convert" Click="ConvertFiles"/>
+									</Grid>
+								</Grid>
+							</suki:GroupBox>
+						</suki:GlassCard>
+						<suki:GlassCard Grid.RowSpan="2" Grid.Column="2" Margin="20">
+							<suki:GroupBox Header="Progress">
+								<Grid>
+									<suki:WaveProgress Value="{Binding ProgressValue}"/>
+								</Grid>
+							</suki:GroupBox>
+						</suki:GlassCard>
+					</Grid>
+				</suki:SukiSideMenuItem.PageContent>
+			</suki:SukiSideMenuItem>
+		</suki:SukiSideMenu.Items>
+	</suki:SukiSideMenu>
 </suki:SukiWindow>
