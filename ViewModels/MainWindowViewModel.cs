@@ -90,7 +90,7 @@ namespace KutsuGUI.ViewModels
 		{
 			get
 			{
-				return ["Choose Input Files", "Select Output Folder", "Input New File Name"];
+				return ["Choose Input File(s)", "Select Output Folder", "Input New File Name"];
 			}
 		}
 	}
