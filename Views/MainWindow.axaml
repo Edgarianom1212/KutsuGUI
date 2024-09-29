@@ -31,7 +31,7 @@
 		<suki:SukiSideMenu.Items>
 			<suki:SukiSideMenuItem Header="File Manager">
 				<suki:SukiSideMenuItem.Icon>
-					<Image Source="/Assets/KutsuGUI.ico"/>
+					<i:Icon Value="mdi-file-arrow-left-right-outline" FontSize="20"/>
 				</suki:SukiSideMenuItem.Icon>
 				<suki:SukiSideMenuItem.PageContent>
 					<Grid ColumnDefinitions="2*, Auto, 1*" RowDefinitions="1*, 1*">
@@ -78,6 +78,21 @@
 								</Grid>
 							</suki:GroupBox>
 						</suki:GlassCard>
+					</Grid>
+				</suki:SukiSideMenuItem.PageContent>
+			</suki:SukiSideMenuItem>
+			<suki:SukiSideMenuItem Header="How to use?">
+				<suki:SukiSideMenuItem.Icon>
+					<i:Icon Value="mdi-help-circle-outline" FontSize="20"/>
+				</suki:SukiSideMenuItem.Icon>
+				<suki:SukiSideMenuItem.PageContent>
+					<Grid Width="500" Height="200" RowDefinitions="1*, 1* 1*" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<suki:Stepper Index="{Binding HowToUseIndex}" Steps="{Binding HowToUseSteps}"/>
+						<Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" ColumnDefinitions="1*, 1*">
+							<Button Content="Previous" Click="HowToUseStepPrevious"/>
+							<Button Grid.Column="1" Content="Next" Click="HowToUseStepNext"/>
+						</Grid>
+						<TextBlock Grid.Row="2" TextWrapping="Wrap" Width="400" TextAlignment="Center" Text="The files will be put in the output folder and will be renamed with an index at the end"/>
 					</Grid>
 				</suki:SukiSideMenuItem.PageContent>
 			</suki:SukiSideMenuItem>

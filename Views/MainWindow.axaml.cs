@@ -40,8 +40,7 @@ namespace KutsuGUI.Views
 			SukiTheme.GetInstance().ChangeColorTheme(PurpleTheme);
 		}
 
-
-		private void OpenFileExplorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+		private void OpenFileExplorer(object? sender, RoutedEventArgs e)
 		{
 			IStorageProvider storage = this.StorageProvider;
 			FilePickerOpenOptions options = new FilePickerOpenOptions();
@@ -55,7 +54,7 @@ namespace KutsuGUI.Views
 					vm.SelectedFilesStrings.Add(vm.SelectedFiles.ElementAt(i).Path.ToString().Remove(0, 8));
 			}
 		}
-		private void OpenFolderExplorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+		private void OpenFolderExplorer(object? sender,RoutedEventArgs e)
 		{
 			IStorageProvider storage = this.StorageProvider;
 			FilePickerSaveOptions options = new FilePickerSaveOptions();
@@ -64,7 +63,7 @@ namespace KutsuGUI.Views
 				vm.SelectedFolderString = vm.SelectedFolders.ElementAt(0).Path.ToString().Remove(0, 8);
 		}
 
-		private async void ConvertFiles(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+		private async void ConvertFiles(object? sender, RoutedEventArgs e)
 		{
 			ConvertButton.ShowProgress();
 
@@ -127,6 +126,17 @@ namespace KutsuGUI.Views
 					await Task.Delay(40); //put some loading time so user sees the process
 				}
 			}
+		}
+
+		private void HowToUseStepNext(object? sender, RoutedEventArgs e)
+		{
+			if (vm.HowToUseIndex < vm.HowToUseSteps.Count()-1)
+				vm.HowToUseIndex++;
+		}		
+		private void HowToUseStepPrevious(object? sender, RoutedEventArgs e)
+		{
+			if (vm.HowToUseIndex > 0)
+				vm.HowToUseIndex--;
 		}
 	}
 }

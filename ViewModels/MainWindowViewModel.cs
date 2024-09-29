@@ -19,6 +19,7 @@ namespace KutsuGUI.ViewModels
 			};
 			SelectedFolderString = initSelectedFolderString;
 			NewFileName = "";
+			HowToUseIndex = 0;
 		}
 
 		public void SetDefaultValues()
@@ -71,6 +72,25 @@ namespace KutsuGUI.ViewModels
 			set
 			{
 				this.RaiseAndSetIfChanged(ref selectedFolderString, value);
+			}
+		}
+		private int howToUseIndex;
+		public int HowToUseIndex
+		{
+			get
+			{
+				return howToUseIndex;
+			}
+			set
+			{
+				this.RaiseAndSetIfChanged(ref howToUseIndex, value);
+			}
+		}
+		public IEnumerable<string> HowToUseSteps
+		{
+			get
+			{
+				return ["Choose Input Files", "Select Output Folder", "Input New Name"];
 			}
 		}
 	}
