@@ -20,6 +20,10 @@ namespace KutsuGUI.ViewModels
 			SelectedFolderString = initSelectedFolderString;
 			NewFileName = "";
 			HowToUseIndex = 0;
+			SelectedFileEndings = new ObservableCollection<string>()
+			{
+				initSelectedFileString
+			};
 		}
 
 		public void SetDefaultValues()
@@ -30,11 +34,14 @@ namespace KutsuGUI.ViewModels
 			SelectedFilesStrings.Add(initSelectedFileString);
 			NewFileName = "";
 			SelectedFolderString = initSelectedFolderString;
+			SelectedFileEndings.Clear();
+			SelectedFileEndings.Add(initSelectedFileString);
 		}
 
 		public string initSelectedFileString = "Your input files will appear here";
 		public string initSelectedFolderString = "Your output folder will appear here";
 		public IReadOnlyList<IStorageFile>? SelectedFiles { get; set; }
+		public ObservableCollection<string> SelectedFileEndings { get; set; }
 		public IReadOnlyList<IStorageFolder>? SelectedFolders { get; set; }
 		public ObservableCollection<string> SelectedFilesStrings { get; set; }
 		private int progressValue;

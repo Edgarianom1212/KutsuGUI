@@ -24,16 +24,18 @@ namespace KutsuGUI.Views
 		private SukiToastBuilder noFilesSelectedToast;
 		private SukiToastBuilder noDestinationSelectedToast;
 		private SukiToastBuilder noNewFileNameToast;
+		private SukiToastBuilder failureToast;
+		private SukiToastBuilder specialCharacterToast;
+
 		private ViewModels.MainWindowViewModel vm;
 		private bool wasSuccess = false;
+		private string[] specialCharacterStrings = ["\\", "/", ":", "*", "?", "\"", "<", ">", "|", "."];
 
 		protected override void OnLoaded(RoutedEventArgs e)
 		{
 			base.OnLoaded(e);
 
 			vm = DataContext as ViewModels.MainWindowViewModel;
-
-
 
 			var PurpleTheme = new SukiColorTheme("Purple", Colors.MediumPurple, Colors.BlueViolet);
 			SukiTheme.GetInstance().AddColorTheme(PurpleTheme);
@@ -50,11 +52,19 @@ namespace KutsuGUI.Views
 			if (vm.SelectedFiles?.Count > 0)
 			{
 				vm.SelectedFilesStrings.Clear();
+				vm.SelectedFileEndings.Clear();
 				for (int i = 0; i < vm.SelectedFiles.Count; i++)
+				{
 					vm.SelectedFilesStrings.Add(vm.SelectedFiles.ElementAt(i).Path.ToString().Remove(0, 8));
+					string extension = Path.GetExtension(vm.SelectedFiles.ElementAt(i).Path.ToString().Remove(0, 8));
+					if (extension == string.Empty || extension == null)
+						vm.SelectedFilesStrings.Add("");
+					else
+						vm.SelectedFileEndings.Add(extension);
+				}
 			}
 		}
-		private void OpenFolderExplorer(object? sender,RoutedEventArgs e)
+		private void OpenFolderExplorer(object? sender, RoutedEventArgs e)
 		{
 			IStorageProvider storage = this.StorageProvider;
 			FilePickerSaveOptions options = new FilePickerSaveOptions();
@@ -67,8 +77,13 @@ namespace KutsuGUI.Views
 		{
 			ConvertButton.ShowProgress();
 
+			bool skip = false;
+
 			successToast = vm.ToastManager.CreateToast().WithTitle("Success").WithContent("Finished converting files").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			successToast.SetType(Avalonia.Controls.Notifications.NotificationType.Success);
+
+			failureToast = vm.ToastManager.CreateToast().WithTitle("Failure").WithContent("Application Error, restart needed").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
+			failureToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
 
 			noFilesSelectedToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No files were selected").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			noFilesSelectedToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
@@ -79,21 +94,25 @@ namespace KutsuGUI.Views
 			noNewFileNameToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("No new file name was selected").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
 			noNewFileNameToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
 
-			if (vm.NewFileName.Trim() != "" && vm.SelectedFilesStrings?[0] != vm.initSelectedFileString && vm.SelectedFolderString != vm.initSelectedFolderString)
+			specialCharacterToast = vm.ToastManager.CreateToast().WithTitle("Warning").WithContent("Filename cannot contain a special character").Dismiss().After(TimeSpan.FromSeconds(3)).Dismiss().ByClicking();
+			specialCharacterToast.SetType(Avalonia.Controls.Notifications.NotificationType.Error);
+
+			foreach (string specialChar in specialCharacterStrings)
+			{
+				if (vm.NewFileName.Contains(specialChar))
+					skip = true;
+			}
+			if (!skip && vm.SelectedFileEndings.Count == vm.SelectedFilesStrings.Count && vm.NewFileName.Trim() != "" && vm.SelectedFilesStrings?[0] != vm.initSelectedFileString && vm.SelectedFolderString != vm.initSelectedFolderString && !vm.NewFileName.Contains("."))
 			{
 				for (int i = 0; i < vm.SelectedFilesStrings?.Count; i++)
-				{
 					if (File.Exists(vm.SelectedFilesStrings.ElementAt(i)))
-					{
-						File.Move(vm.SelectedFilesStrings.ElementAt(i), vm.SelectedFolderString + vm.NewFileName.Trim() + (i + 1).ToString());
-						vm.SetDefaultValues();
-						wasSuccess = true;
-						for (int y = 0; y < 20; y++)
-						{
-							vm.ProgressValue += 5;
-							await Task.Delay(40); //put some loading time so user sees the process
-						}
-					}
+						File.Move(vm.SelectedFilesStrings.ElementAt(i), vm.SelectedFolderString + vm.NewFileName.Trim() + (i + 1).ToString() + vm.SelectedFileEndings.ElementAt(i));
+				vm.SetDefaultValues();
+				wasSuccess = true;
+				for (int y = 0; y < 20; y++)
+				{
+					vm.ProgressValue += 5;
+					await Task.Delay(40); //put some loading time so user sees the process
 				}
 			}
 			if (!wasSuccess)
@@ -108,17 +127,25 @@ namespace KutsuGUI.Views
 			}
 			else
 			{
-				if (vm.NewFileName.Trim() == "")
-					noNewFileNameToast.Queue();
+				if (vm.SelectedFileEndings.Count != vm.SelectedFilesStrings?.Count)
+					failureToast.Queue();
+				else
+				{
+					if (skip)
+						specialCharacterToast.Queue();
 
-				if (vm.SelectedFolderString == vm.initSelectedFolderString)
-					noDestinationSelectedToast.Queue();
+					if (vm.NewFileName.Trim() == "")
+						noNewFileNameToast.Queue();
 
-				if (vm.SelectedFilesStrings?[0] == vm.initSelectedFileString)
-					noFilesSelectedToast.Queue();
+					if (vm.SelectedFolderString == vm.initSelectedFolderString)
+						noDestinationSelectedToast.Queue();
+
+					if (vm.SelectedFilesStrings?[0] == vm.initSelectedFileString)
+						noFilesSelectedToast.Queue();
+				}
 			}
 			await Task.Delay(3000);
-			if(vm.ProgressValue == 100)
+			if (vm.ProgressValue == 100)
 			{
 				for (int y = 0; y < 20; y++)
 				{
@@ -130,9 +157,9 @@ namespace KutsuGUI.Views
 
 		private void HowToUseStepNext(object? sender, RoutedEventArgs e)
 		{
-			if (vm.HowToUseIndex < vm.HowToUseSteps.Count()-1)
+			if (vm.HowToUseIndex < vm.HowToUseSteps.Count() - 1)
 				vm.HowToUseIndex++;
-		}		
+		}
 		private void HowToUseStepPrevious(object? sender, RoutedEventArgs e)
 		{
 			if (vm.HowToUseIndex > 0)
